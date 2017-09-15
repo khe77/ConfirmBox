@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">결재통</string>
+
+    <!-- 로그인 -->
+    <string name="login_title">로그인</string>
+    <string name="login_uid">사번</string>
+    <string name="login_upw">비밀번호</string>
+    <string name="login_btn">로그인</string>
 </resources>
