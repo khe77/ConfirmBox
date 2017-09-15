@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="20dp"
-            android:text="@string/login_uid" />
+            android:text="사      번" />
         <EditText
             android:id="@+id/uid"
             android:layout_width="0dp"
@@ -78,7 +78,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
         android:text="@string/login_btn"
         android:onClick="onLogin"
         android:layout_margin="10dp"
