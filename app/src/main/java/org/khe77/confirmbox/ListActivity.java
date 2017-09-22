@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -41,11 +42,11 @@ public class ListActivity extends AppCompatActivity {
                 convertView = layoutInflater.inflate(R.layout.list_item, null);
             }
             ImageView imageView = (ImageView)convertView.findViewById(R.id.image);
-            TextView text1View = (TextView)convertView.findViewById(R.id.title);
-            TextView text2View = (TextView)convertView.findViewById(R.id.text);
+            TextView titleView = (TextView)convertView.findViewById(R.id.title);
+            TextView nameView = (TextView)convertView.findViewById(R.id.name);
             Item item = itemList.get(position);
-            text1View.setText(item.title);
-            text2View.setText(item.name);
+            titleView.setText(item.title);
+            nameView.setText(item.name);
             return convertView;
         }
 
@@ -64,14 +65,30 @@ public class ListActivity extends AppCompatActivity {
         itemList.add(new Item("Title03", "name03"));
         itemList.add(new Item("Title04", "name04"));
         itemList.add(new Item("Title05", "name05"));
+        itemList.add(new Item("Title06", "name06"));
+        itemList.add(new Item("Title07", "name07"));
+        itemList.add(new Item("Title08", "name08"));
+        itemList.add(new Item("Title09", "name09"));
+        itemList.add(new Item("Title10", "name10"));
+        itemList.add(new Item("Title11", "name11"));
+        itemList.add(new Item("Title12", "name12"));
+        itemList.add(new Item("Title13", "name13"));
+        itemList.add(new Item("Title14", "name14"));
+        itemList.add(new Item("Title15", "name15"));
+        itemList.add(new Item("Title16", "name16"));
+        itemList.add(new Item("Title17", "name17"));
+        itemList.add(new Item("Title18", "name18"));
+        itemList.add(new Item("Title19", "name19"));
+        itemList.add(new Item("Title20", "name20"));
         itemAdpater = new ItemAdapter(ListActivity.this, R.layout.list_item,
                 itemList);
         listView.setAdapter(itemAdpater);
-    }
-
-    public void onDetail(View view){
-        handler.sendEmptyMessage(0);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                handler.sendEmptyMessage(0);
+            }
+        });
     }
 
     Handler handler = new Handler() {
