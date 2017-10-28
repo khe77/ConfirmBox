@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="결재"
-            android:onClick="onLogin"
+            android:onClick="confirm"
             android:layout_margin="10dp"
             android:background="@color/login_btn_bg"/>
         <Button
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="반려"
-            android:onClick="onLogin"
+            android:onClick="reject"
             android:layout_margin="10dp"
             android:background="@color/login_btn_bg"/>
     </LinearLayout>
