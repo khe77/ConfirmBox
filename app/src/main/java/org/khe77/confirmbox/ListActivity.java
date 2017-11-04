@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,8 +35,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.khe77.confirmbox.R.id.en;
+
 public class ListActivity extends AppCompatActivity {
     ListView listView = null;
+    String gtask_id = "";
+    String gcfm_seq = "";
+    String gtitle = "";
+    String gtext = "";
+
     class Item {
         String en;
         String task_id;
@@ -64,7 +73,7 @@ public class ListActivity extends AppCompatActivity {
                         (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = layoutInflater.inflate(R.layout.list_item, null);
             }
-            TextView enView = (TextView)convertView.findViewById(R.id.en);
+            TextView enView = (TextView)convertView.findViewById(en);
             TextView task_idView = (TextView)convertView.findViewById(R.id.task_id);
             TextView cfm_seqView = (TextView)convertView.findViewById(R.id.cfm_seq);
             TextView cfm_titleView = (TextView)convertView.findViewById(R.id.cfm_title);
@@ -90,6 +99,37 @@ public class ListActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(ListActivity.this, "선택:"+item.cfm_seq, Toast.LENGTH_SHORT).show();
+                    /*
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    final View detailView = layoutInflater.inflate(R.layout.detail, null);
+                    AlertDialog.Builder detailDialog = new AlertDialog.Builder(ListActivity.this);
+                    detailDialog.setView(detailView);
+                    Button confirmButton = (Button)detailView.findViewById(R.id.confirmButton);
+                    confirmButton.setOnClickListener(new Button.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(ListActivity.this, "클릭", Toast.LENGTH_SHORT).show();
+                            new LoadConfirmList().execute("http://172.16.2.5:3000/confirms?en="+en);
+                            return;
+                        }
+                    });
+                    detailDialog.show();
+                    */
+                    gtask_id = item.task_id;
+                    gcfm_seq = item.cfm_seq;
+                    gtitle = item.cfm_title;
+                    gtext = item.cfm_text;
+
+                    handler.sendEmptyMessage(2);
+                }
+            });
+
             return convertView;
         }
 
@@ -102,9 +142,10 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        U.getInstance().setListActivity(this);
         Intent intent = getIntent();
         String en = intent.getExtras().getString("en");
-        new LoadConfirmList().execute("http://172.16.2.5:3000/list?en="+en);
+        new LoadConfirmList().execute("http://172.16.2.5:3000/confirms?en="+en);
     }
 
     class LoadConfirmList extends AsyncTask<String,String,String> {
@@ -119,21 +160,17 @@ public class ListActivity extends AppCompatActivity {
             dialog.dismiss();
             try {//JSON 파싱 --> ListView에 출력
                 JSONArray array = new JSONArray(s);
-                ArrayList<String> strings = new ArrayList<String>();
                 listView = (ListView)findViewById(R.id.listview);
+                itemList.clear();
                 for (int i = 0; i < array.length(); i++) {//JSON배열에서 이름 추출
                     JSONObject obj = array.getJSONObject(i);
-                    //strings.add(obj.getString("cfm_title"));
                     itemList.add(new Item(obj.getString("en"), obj.getString("task_id"), obj.getString("cfm_seq"), obj.getString("cfm_title"), obj.getString("cfm_text"), obj.getString("cfm_name")));
 
                 }
-                /*
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                        ListActivity.this, android.R.layout.simple_list_item_1,strings);
-                */
                 itemAdpater = new ItemAdapter(ListActivity.this, R.layout.list_item,
                         itemList);
                 listView.setAdapter(itemAdpater);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -167,23 +204,47 @@ public class ListActivity extends AppCompatActivity {
     //결재
     public void confirm(View view) {
         JSONArray jsonArray = new JSONArray();
+        Item item;
         if(itemList.size() > 0) {
             for (int i = 0; i < itemList.size(); i++) {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("en", ((Item)itemList.get(i)).en);
-                    obj.put("task_id", ((Item)itemList.get(i)).task_id);
-                    obj.put("cfm_seq", ((Item)itemList.get(i)).cfm_seq);
-                } catch (JSONException e) {
+                item = (Item)itemList.get(i);
+                if(item.checked) {
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("en", item.en);
+                        obj.put("task_id", item.task_id);
+                        obj.put("cfm_seq", item.cfm_seq);
+                    } catch (JSONException e) {
 
+                    }
+                    jsonArray.put(obj);
                 }
-                jsonArray.put(obj);
             }
             new ConfirmList().execute("http://172.16.2.5:3000/confirms", jsonArray.toString());
         }
     }
+
     //반려
     public void reject(View view) {
+        JSONArray jsonArray = new JSONArray();
+        Item item;
+        if(itemList.size() > 0) {
+            for (int i = 0; i < itemList.size(); i++) {
+                item = (Item)itemList.get(i);
+                if(item.checked) {
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("en", item.en);
+                        obj.put("task_id", item.task_id);
+                        obj.put("cfm_seq", item.cfm_seq);
+                    } catch (JSONException e) {
+
+                    }
+                    jsonArray.put(obj);
+                }
+            }
+            new ConfirmList().execute("http://172.16.2.5:3000/rejects", jsonArray.toString());
+        }
     }
 
     class ConfirmList extends AsyncTask<String,String,String> {
@@ -193,8 +254,6 @@ public class ListActivity extends AppCompatActivity {
             StringBuilder output = new StringBuilder();
             try {
                 URL url = new URL(params[0]);
-                JSONObject postDataParams = new JSONObject();
-
                 HttpURLConnection conn = (HttpURLConnection)url.openConnection();
                 if (conn != null) {
                     conn.setConnectTimeout(10000);
@@ -236,7 +295,7 @@ public class ListActivity extends AppCompatActivity {
                 if (json.getBoolean("result") == true) {//로그인 성공
                     Intent intent = getIntent();
                     String en = intent.getExtras().getString("en");
-                    new LoadConfirmList().execute("http://172.16.2.5:3000/list?en="+en);
+                    new LoadConfirmList().execute("http://172.16.2.5:3000/confirms?en="+en);
                 } else {//로그인 실패
                     Toast.makeText(ListActivity.this,
                             "결재 처리중 오류가 발생했습니다.",
@@ -245,4 +304,42 @@ public class ListActivity extends AppCompatActivity {
             } catch (Exception e) { e.printStackTrace(); }
         }
     }
+
+    //푸쉬설정 이동
+    public void pushset(View view) {
+        handler.sendEmptyMessage(0);
+    }
+
+    //푸쉬설정 이동
+    public void logout(View view) {
+        handler.sendEmptyMessage(1);
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if( msg.what == 0 ) {
+                Intent intent = new Intent(ListActivity.this, PushSettingActivity.class);
+                Intent thisintent = getIntent();
+                intent.putExtra("en",thisintent.getExtras().getString("en"));
+                intent.putExtra("name",thisintent.getExtras().getString("name"));
+                startActivity(intent);
+            }else if( msg.what == 1 ) {
+                Intent intent = new Intent(ListActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }else if( msg.what == 2 ) {
+                Intent intent = new Intent(ListActivity.this, ViewActivity.class);
+                Intent thisintent = getIntent();
+                intent.putExtra("en",thisintent.getExtras().getString("en"));
+                intent.putExtra("task_id",gtask_id);
+                intent.putExtra("cfm_seq",gcfm_seq);
+                intent.putExtra("title",gtitle);
+                intent.putExtra("text",gtext);
+                startActivity(intent);
+            }
+        }
+    };
 }

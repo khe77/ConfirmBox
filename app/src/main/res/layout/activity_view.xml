@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10"
-    tools:context="org.khe77.confirmbox.ViewActivity">
+    tools:context="org.khe77.confirmbox.ViewActivity"
+    android:weightSum="10">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="결재"
-            android:onClick="onLogin"
+            android:onClick="confirm"
             android:layout_margin="10dp"
             android:background="@color/login_btn_bg"/>
         <Button
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="반려"
-            android:onClick="onLogin"
+            android:onClick="reject"
             android:layout_margin="10dp"
             android:background="@color/login_btn_bg"/>
     </LinearLayout>
@@ -36,21 +36,30 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
         <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textSize="20dp"
-            android:text="제목입니다."
             android:layout_margin="5dp"
             android:gravity="clip_vertical" />
         <TextView
+            android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
             android:textSize="20dp"
-            android:text="내용입니다." />
-
+            android:layout_weight="2"
+            android:gravity="clip_vertical" />
+        <EditText
+            android:id="@+id/opinion"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="clip_vertical" />
     </LinearLayout>
 
 </LinearLayout>

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -31,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLogin(View view){
-        new Login().execute("http://172.16.2.5:3000/login", en.getText().toString(), pw.getText().toString());
+        String device_token = FirebaseInstanceId.getInstance().getToken();
+        new Login().execute("http://172.16.2.5:3000/login", en.getText().toString(), pw.getText().toString(), device_token);
 
         //handler.sendEmptyMessage(0);
 
@@ -51,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                     //conn.setDoInput(true);
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                    wr.write( "en="+params[1]+"&pw="+params[2] );
+                    wr.write( "en="+params[1]+"&pw="+params[2]+"&device_token="+params[3] );
                     wr.flush();
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(conn.getInputStream()));
@@ -85,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                 if(object.length() > 0 ){
                     Log.i("SH", object.getString("en"));
                     Log.i("SH", object.getString("name"));
-                    Log.i("SH", object.getString("pw"));
                     //sharedpreferences
                     Intent intent = new Intent(LoginActivity.this, ListActivity.class);
                     intent.putExtra("en",object.getString("en"));

@@ -6,4 +6,5 @@
 
     <!-- 로그인 색상 -->
     <color name="login_btn_bg">#569df4</color>
+    <color name="push_btn_bg">#6a6e72</color>
 </resources>

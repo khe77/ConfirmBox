@@ -12,6 +12,37 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
+        android:weightSum="3">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="푸쉬설정"
+            android:onClick="pushset"
+            android:layout_margin="10dp"
+            android:background="@color/push_btn_bg"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="로그아웃"
+            android:onClick="logout"
+            android:layout_margin="10dp"
+            android:background="@color/push_btn_bg"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
         android:weightSum="2">
         <Button
             android:layout_width="0dp"

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "973921983802",
+    "firebase_url": "https://confirmbox-7be98.firebaseio.com",
+    "project_id": "confirmbox-7be98",
+    "storage_bucket": "confirmbox-7be98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973921983802:android:0168d91a1989de73",
+        "android_client_info": {
+          "package_name": "org.khe77.confirmbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973921983802-c6gg3l716f2cliircj9juh7tqshd9198.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyDGAPqt-_h2UcwQVAyhSo9QZlWzNaNYY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
