@@ -159,17 +159,25 @@ public class ListActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {//s-->서버에서 받은 JSON문자열
             dialog.dismiss();
             try {//JSON 파싱 --> ListView에 출력
-                JSONArray array = new JSONArray(s);
-                listView = (ListView)findViewById(R.id.listview);
-                itemList.clear();
-                for (int i = 0; i < array.length(); i++) {//JSON배열에서 이름 추출
-                    JSONObject obj = array.getJSONObject(i);
-                    itemList.add(new Item(obj.getString("en"), obj.getString("task_id"), obj.getString("cfm_seq"), obj.getString("cfm_title"), obj.getString("cfm_text"), obj.getString("cfm_name")));
+                if(!s.equals("{}")) {
+                    JSONArray array = new JSONArray(s);
+                    listView = (ListView) findViewById(R.id.listview);
+                    itemList.clear();
+                    for (int i = 0; i < array.length(); i++) {//JSON배열에서 이름 추출
+                        JSONObject obj = array.getJSONObject(i);
+                        itemList.add(new Item(obj.getString("en"), obj.getString("task_id"), obj.getString("cfm_seq"), obj.getString("cfm_title"), obj.getString("cfm_text"), obj.getString("cfm_name")));
 
+                    }
+                    itemAdpater = new ItemAdapter(ListActivity.this, R.layout.list_item,
+                            itemList);
+                    listView.setAdapter(itemAdpater);
+                } else {
+                    listView = (ListView) findViewById(R.id.listview);
+                    itemList.clear();
+                    itemAdpater = new ItemAdapter(ListActivity.this, R.layout.list_item,
+                            itemList);
+                    listView.setAdapter(itemAdpater);
                 }
-                itemAdpater = new ItemAdapter(ListActivity.this, R.layout.list_item,
-                        itemList);
-                listView.setAdapter(itemAdpater);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -292,7 +300,7 @@ public class ListActivity extends AppCompatActivity {
             dialog.dismiss();
             try {
                 JSONObject json = new JSONObject(s);
-                if (json.getBoolean("result") == true) {//로그인 성공
+                if (json.getBoolean("result") == true) {
                     Intent intent = getIntent();
                     String en = intent.getExtras().getString("en");
                     new LoadConfirmList().execute("http://172.16.2.5:3000/confirms?en="+en);

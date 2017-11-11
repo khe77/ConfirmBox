@@ -20,6 +20,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         U.getInstance().log("SH", "From: " + remoteMessage.getFrom());
         if (remoteMessage.getData().size() > 0) {
             U.getInstance().log("SH", "Message data payload: " + remoteMessage.getData());
@@ -46,7 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         // 맨앞 아이콘(통산 앱의 아이콘 사용)
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         // 제목
-                        .setContentTitle("내부관리 결재통 알리미")
+                        .setContentTitle("신한카드 결재통 알리미")
                         // 알림 내용 (xx님 계좌 xx에 얼마가 입금되었습니다.)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
@@ -55,15 +56,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // 알림을 누르면 무엇을 수행할 것인지 세팅
         //.setContentIntent(pendingIntent);
         // 앱이 구동되어 있지 않다!!
-        if(U.getInstance().getListActivity() == null){
-            Intent intent = new Intent(this, ListActivity.class);
+        //if(U.getInstance().getListActivity() == null){
+            Intent intent = new Intent(this, LoginActivity.class);
             // 액티비티를 띄울때 데이타를 보내기
             intent.putExtra("push", messageBody);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_ONE_SHOT);
             notificationBuilder.setContentIntent(pendingIntent);
-        }
+        //}
         // 알림 띠우기 ================================================================
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
